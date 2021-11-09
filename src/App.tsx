@@ -42,7 +42,7 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
 
-      {/* Router */}
+      {/* Application Router */}
       <IonRouterOutlet>
         <Route exact path="/home">
           <Home />
@@ -58,10 +58,10 @@ const App: React.FC = () => (
         </Route>
       </IonRouterOutlet>
 
-      {/* Tab bar */}
+      {/* Application Bottom Tab Bar */}
       <IonTabBar slot="bottom">
         <IonTabButton tab="home" href="/home">
-          <IonIcon size="small" icon={homeIcon} />
+          <IonIcon size="default" icon={ homeIcon } />
           Home
         </IonTabButton>
       </IonTabBar>

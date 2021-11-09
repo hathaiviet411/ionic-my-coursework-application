@@ -16,18 +16,18 @@ async function initDB() {
 };
 
 initDB().then(() => {
-  console.log('Database is ready');
+  console.log('Database Initiation Successfully !');
 });
 
-export async function insertApartment(apartment: any) {
+export async function createApartment(apartment: any) {
   const db = await openDB(DATABASE, 1);
 
   await db.put(TABLE, apartment)
     .then(() => {
-      console.log('You have succesfully created 1 apartment: ', apartment);
+      console.log('Created ', apartment, ' successfully !');
     })
     .catch((err) => {
-      console.log('You have an error occurred');
+      console.log('An Error Occurred.');
       console.log(err);
     });
 };
@@ -39,7 +39,7 @@ export async function updateApartment(dataUpdate: any, id: number) {
 
   apartment.propertyType = dataUpdate.propertyType;
   apartment.bedrooms = dataUpdate.bedrooms;
-  apartment.dateTimeAdding = dataUpdate.dateTimeAdding;
+  apartment.date = dataUpdate.date;
   apartment.monthlyRentPrice = dataUpdate.monthlyRentPrice;
   apartment.furnitureTypes = dataUpdate.furnitureTypes;
   apartment.notes = dataUpdate.notes;
@@ -47,24 +47,24 @@ export async function updateApartment(dataUpdate: any, id: number) {
 
   await db.put(TABLE, apartment)
     .then(() => {
-      console.log(`You have successfully updated information for apartment: ${id}`);
+      console.log(`Updated apartment: 🏛 - ${id}`, ' successfully !');
       console.log(apartment);
     })
     .catch((err) => {
-      console.log('You have an error occurred');
+      console.log('An Error Occurred.');
       console.log(err);
     });
 };
 
-export async function deleteApartment(id: number) {
+export async function removeApartment(id: number) {
   const db = await openDB(DATABASE, 1);
 
   await db.delete(TABLE, id)
     .then(() => {
-      console.log(`You have successfully deleted the apartment: ${id}`);
+      console.log(`Delete apartment: 🏛 - ${id}`, ' successfully !');
     })
     .catch((err) => {
-      console.log('You have an error occurred');
+      console.log('An Error Occurred.');
       console.log(err);
     });
 };
@@ -76,18 +76,18 @@ export async function getApartmentById(id: number) {
   return apartment;
 }
 
-export async function getAllApartment() {
+export async function getListAllApartment() {
   const db = await openDB(DATABASE, 1);
 
   let apartment = await db.transaction(TABLE).objectStore(TABLE).openCursor();
 
-  let allApartment = [];
+  let allExistedApartment = [];
 
   while (apartment) {
-    allApartment.push(apartment.value);
+    allExistedApartment.push(apartment.value);
 
     apartment = await apartment.continue();
   };
 
-  return allApartment;
+  return allExistedApartment;
 };

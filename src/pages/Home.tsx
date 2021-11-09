@@ -20,69 +20,58 @@ import {
 import '../style/Home.css';
 import { addCircle } from 'ionicons/icons';
 import { useState } from 'react';
-import { getAllApartment, deleteApartment } from '../databaseHandler';
+import { getListAllApartment, removeApartment } from '../databaseHandler';
 import { Apartment } from '../apartment';
 
-function showFurnitureTypes(val: string) {
-  const Furnished = 'Furnished';
-  const Unfurnished = 'Unfurnished';
-  const PartFurnished = 'Part Furnished';
+function showFurnitureTypes(furniture_type: string) {
+  const FurnishedType = 'Furnished';
+  const UnfurnishedType = 'Unfurnished';
+  const PartFurnishedType = 'Part Furnished';
 
-  switch (val) {
-    case 'Furnished': {
-      return Furnished;
-    }
-
-    case 'Unfurnished': {
-      return Unfurnished;
-    }
-
-    case 'PartFurnished': {
-      return PartFurnished;
-    }
-
-    default: {
+  if (furniture_type) {
+    if (furniture_type === 'Furnished') {
+      return FurnishedType;
+    } else if (furniture_type === 'Unfurnished') {
+      return UnfurnishedType;
+    } else if (furniture_type === 'PartFurnished') {
+      return PartFurnishedType;
+    } else{
       return '';
     }
   }
 }
 
 const Home: React.FC = () => {
-  const [listApartment, setListApartment] = useState<Apartment[]>([]);
-  const [showToast, setShowToast] = useState(false);
-  const [keySearch, setKeySearch] = useState('');
+  const [rentalApartmentList, setRentalApartmentList] = useState<Apartment[]>([]);
+  const [showToastMessage, setShowToastMessage] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
   const [message, setMessage] = useState('');
-  const [present] = useIonAlert();
+  const [confirmationModal] = useIonAlert();
 
   async function fetchData() {
-    const allApartment = await getAllApartment();
-
-    setListApartment(allApartment);
+    const listAllRentalApartment = await getListAllApartment();
+    setRentalApartmentList(listAllRentalApartment);
   };
 
   useIonViewDidEnter(() => {
     fetchData();
   });
 
-  async function handleDelete(id: number) {
-
-    present({
-      header: 'Confirm',
-      message: `Do you want to delete the apartment whose ID is ${id}?`,
+  async function handleRemoveApartment(id: number) {
+    confirmationModal({
+      header: 'Deletion Confirmation',
+      message: `The deleted apartment can not be restore, are you sure to delete the apartment: 🏛 - ${id}?`,
       buttons: [
-        'Cancel',
+        'Return',
         { 
-          text: 'Ok', 
+          text: 'Continue', 
           handler: async() => {
-            await deleteApartment(id);
-
-            setMessage(`You have successfully deleted the apartment with ID ${id}`);
-            setShowToast(true);
-
+            await removeApartment(id);
+            setMessage(`Delete apartment: 🏛 - ${id}, successfully !`);
+            setShowToastMessage(true);
             setTimeout(()=>{
-              setShowToast(false);
+              setShowToastMessage(false);
             }, 5000);
-
             await fetchData();
           } 
         },
@@ -90,87 +79,87 @@ const Home: React.FC = () => {
     });
   }
 
-  async function handleSearch(event: any) {
-    setKeySearch(event.detail.value);
-
-    let allApartment = await getAllApartment();
-
+  async function searchApartment(event: any) {
+    setSearchValue(event.detail.value);
+    let listAllRentalApartment = await getListAllApartment();
     if (event.detail.value) {
-      const re = new RegExp(`${event.detail.value}.*`);
-      let res = [];
-      for (let item = 0; item < allApartment.length; item++) {
-        if (re.test(allApartment[item]['propertyType'])) {
-          res.push(allApartment[item])
+      const regex = new RegExp(`${event.detail.value}.*`);
+      let response = [];
+      for (let item = 0; item < listAllRentalApartment.length; item++) {
+        if (regex.test(listAllRentalApartment[item]['propertyType'])) {
+          response.push(listAllRentalApartment[item])
         }
       }
-  
-      setListApartment(res);
+      setRentalApartmentList(response);
     } else {
-      setListApartment(allApartment);
+      setRentalApartmentList(listAllRentalApartment);
     }
   }
 
   return (
     <IonPage>
 
-      {/* Header */}
+      {/* Application Header */}
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Rental Apartments Finder</IonTitle>
+          <IonTitle>🏩 Apartment Rental</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      {/* Content */}
+      {/* Application Content */}
       <IonContent fullscreen>
         <IonGrid>
 
           <IonRow>
             <IonCol>
-              <IonButton size="small" color="primary" href="/create" expand="block">
-                <IonIcon slot="start" icon={addCircle}></IonIcon>
-                Create new
+              <IonButton size="default" color="dark" href="/create" expand="block">
+                <IonIcon slot="start" icon={ addCircle }></IonIcon>
               </IonButton>
             </IonCol>
           </IonRow>
 
           <IonRow>
             <IonCol>
-              <IonInput value={keySearch} placeholder="Search" onIonChange={event => handleSearch(event)}></IonInput>
+              <IonInput value={ searchValue } placeholder="Search for apartment here..." onIonChange={event => searchApartment(event)}></IonInput>
             </IonCol>
           </IonRow>
 
-          {listApartment &&
-            listApartment.map((apartment, index) => 
+          {rentalApartmentList &&
+            rentalApartmentList.map((rentalApartment, index) => 
               <IonCard key={index}>
-                <IonCardHeader>Aparment ID: #{ apartment.id }</IonCardHeader>
+
+                <IonCardHeader>
+                  Rental Apartment ID: 🏛 - { rentalApartment.id }
+                </IonCardHeader>
+
                 <IonCardContent>
-                  <h6>Property Type: { apartment.propertyType }</h6>
-                  <h6>Bed Rooms: { apartment.bedrooms }</h6>
-                  <h6>Date Time Adding: { apartment.dateTimeAdding }</h6>
-                  <h6>Monthly Rent Price: { apartment.monthlyRentPrice}</h6>
-                  <h6>Furniture Types: { showFurnitureTypes(apartment.furnitureTypes) }</h6>
-                  <h6>Notes: { apartment.notes }</h6>
-                  <h6>Name Reporter: { apartment.nameReporter }</h6>
+                  <h6>🗃 Property Type: { rentalApartment.propertyType }</h6>
+                  <h6>🛌 Bedrooms: { rentalApartment.bedrooms }</h6>
+                  <h6>📅 Date: { rentalApartment.date }</h6>
+                  <h6>💰 Monthly Rent Price: { rentalApartment.monthlyRentPrice}</h6>
+                  <h6>🚪 Furniture Types: { showFurnitureTypes(rentalApartment.furnitureTypes) }</h6>
+                  <h6>📝 Notes: { rentalApartment.notes }</h6>
+                  <h6>🔖 Name of The Reporter: { rentalApartment.nameReporter }</h6>
 
                   <IonRow>
                     <IonCol>
                       <IonButton 
-                        size="small" 
+                        size="default" 
                         color="warning" 
-                        className="btn-handle" 
+                        className="functional-btn" 
                         style={{ float: 'left' }}
-                        routerLink={`detail/${apartment.id}`}
+                        routerLink={`/detail/${rentalApartment.id}`}
                       >Update</IonButton>
                     </IonCol>
 
                     <IonCol>
                       <IonButton 
-                        size="small" 
+                        size="default" 
                         color="danger" 
-                        className="btn-handle" 
+                        className="functional-btn" 
                         style={{ float: 'right' }}
-                        onClick={() => handleDelete(apartment.id || -1)}
-                      >Delete</IonButton>
+                        onClick={() => handleRemoveApartment(rentalApartment.id || -1)}
+                      >Remove</IonButton>
                     </IonCol>
                   </IonRow>
                 </IonCardContent>
@@ -180,8 +169,9 @@ const Home: React.FC = () => {
 
         </IonGrid>
       </IonContent>
-
-      <IonToast isOpen={showToast} header="Success" message={message} color="success" position="top"></IonToast>
+      
+      {/* Application Toast Message */}
+      <IonToast isOpen={ showToastMessage } header="Success" message={ message } color="success" position="top"></IonToast>
 
     </IonPage>
   );
