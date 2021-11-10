@@ -110,6 +110,7 @@ const Home: React.FC = () => {
       <IonContent fullscreen>
         <IonGrid>
 
+          {/* Button Create New Apartment */}
           <IonRow>
             <IonCol>
               <IonButton size="default" color="dark" href="/create" expand="block">
@@ -118,9 +119,10 @@ const Home: React.FC = () => {
             </IonCol>
           </IonRow>
 
+          {/* Search Functionality */}
           <IonRow>
             <IonCol>
-              <IonInput value={ searchValue } placeholder="Search for apartment here..." onIonChange={event => searchApartment(event)}></IonInput>
+              <IonInput value={ searchValue } placeholder="🔎 Search" onIonChange={event => searchApartment(event)}></IonInput>
             </IonCol>
           </IonRow>
 
