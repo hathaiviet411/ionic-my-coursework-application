@@ -24,6 +24,14 @@ import { useState } from 'react';
 import { useHistory } from 'react-router';
 import { createApartment } from '../databaseHandler';
 
+function ymdFormatDate(year: number, month: number, date: number) {
+  if (!year && !month && !date) {
+    return '';
+  }
+
+  return `${year}/${month}/${date}`;
+};
+
 function convertDateToYMD(date: string) {
   if (!date) {
     return '';
@@ -36,13 +44,6 @@ function convertDateToYMD(date: string) {
   return ymdFormatDate(year, month, day);
 };
 
-function ymdFormatDate(year: number, month: number, date: number) {
-  if (!year && !month && !date) {
-    return '';
-  }
-
-  return `${year}/${month}/${date}`;
-};
 
 function showFurnitureTypes(furniture_type: string) {
   const FurnishedType = 'Furnished';
@@ -124,9 +125,9 @@ const Create: React.FC = () => {
       setTimeout(() => {
         setShowToastMessage(false);
       }, 3000)
-    } else if (RentalApplicationData.nameReporter.length === 0) {
+    } else if (RentalApplicationData.furnitureTypes.length === 0) {
       setHeaderMessage('Warning');
-      setMessage(`Reporter's name is required !`);
+      setMessage(`Furniture type is required !`);
       setColorMessage('danger');
       setShowToastMessage(true);
 
@@ -170,13 +171,35 @@ const Create: React.FC = () => {
   };
 
   const handleResetData = () => {
-    setPropertyType('');
-    setBedrooms('');
-    setDate('');
-    setMonthlyRentPrice('');
-    setFurnitureTypes('');
-    setNotes('');
-    setNameReporter('');
+    confirmationModal({
+      header: 'Reset all entered data.',
+      message: `
+        <h6>All the following data will be delete, are you sure ?</h6>
+        <div>Property Type: ${propertyType}</div>
+        <div>Bedrooms: ${bedrooms}</div>
+        <div>Date: ${convertDateToYMD(date)}</div>
+        <div>Monthly Rent Price: ${monthlyRentPrice}</div>
+        <div>Furniture Types: ${showFurnitureTypes(furnitureTypes)}</div>
+        <div>Notes: ${notes}</div>
+        <div>Name Reporter: ${nameReporter}</div>
+      `,
+      buttons: [
+        'Return',
+        { 
+          text: 'Continue', 
+          handler: () => {
+            setPropertyType('');
+            setBedrooms('');
+            setDate('');
+            setMonthlyRentPrice('');
+            setFurnitureTypes('');
+            setNotes('');
+            setNameReporter('');
+          } 
+        },
+      ],
+    });
+    
   }
 
   return (
