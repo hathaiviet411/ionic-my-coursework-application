@@ -158,9 +158,9 @@ const Update: React.FC = () => {
       }, 3000)
     } else {
       confirmationModal({
-        header: 'Create New Apartment Confirmation',
+        header: `Update Apartment - ${id} Confirmation`,
         message: `
-          <h6>A New Apartment Will Be Create With The Following Data: </h6>
+          <h6>Apartment - ${id} will be update with the following data: </h6>
           <div>Property Type: ${RentalApplicationData.propertyType}</div>
           <div>Bedrooms: ${RentalApplicationData.bedrooms}</div>
           <div>Date: ${RentalApplicationData.date}</div>
@@ -193,13 +193,34 @@ const Update: React.FC = () => {
   };
 
   const handleResetData = () => {
-    setPropertyType('');
-    setBedrooms('');
-    setDate('');
-    setMonthlyRentPrice('');
-    setFurnitureTypes('');
-    setNotes('');
-    setNameReporter('');
+    confirmationModal({
+      header: 'Reset all entered data.',
+      message: `
+        <h6>All the following data will be delete, are you sure ?</h6>
+        <div>Property Type: ${propertyType}</div>
+        <div>Bedrooms: ${bedrooms}</div>
+        <div>Date: ${convertDateToYMD(date)}</div>
+        <div>Monthly Rent Price: ${monthlyRentPrice}</div>
+        <div>Furniture Types: ${showFurnitureTypes(furnitureTypes)}</div>
+        <div>Notes: ${notes}</div>
+        <div>Name Reporter: ${nameReporter}</div>
+      `,
+      buttons: [
+        'Return',
+        { 
+          text: 'Continue', 
+          handler: () => {
+            setPropertyType('');
+            setBedrooms('');
+            setDate('');
+            setMonthlyRentPrice('');
+            setFurnitureTypes('');
+            setNotes('');
+            setNameReporter('');
+          } 
+        },
+      ],
+    });
   }
 
   return (
@@ -208,7 +229,7 @@ const Update: React.FC = () => {
       {/* Application Header */}
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Creat Screen</IonTitle>
+          <IonTitle>Update Screen</IonTitle>
         </IonToolbar>
       </IonHeader>
 
@@ -315,7 +336,7 @@ const Update: React.FC = () => {
           {/* Button Submit */}
           <IonRow>
             <IonCol>
-              <IonButton color="success" expand="block" onClick={ handleSubmitNewApartment }>🗃 Submit</IonButton>
+              <IonButton color="success" expand="block" onClick={ handleSubmitNewApartment }>🗃 Update</IonButton>
             </IonCol>
           </IonRow>
 

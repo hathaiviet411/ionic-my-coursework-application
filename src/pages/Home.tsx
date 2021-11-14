@@ -151,7 +151,8 @@ const Home: React.FC = () => {
                         className="functional-btn" 
                         style={{ float: 'left' }}
                         routerLink={`/detail/${rentalApartment.id}`}
-                      >Update</IonButton>
+                      >Update
+                      </IonButton>
                     </IonCol>
 
                     <IonCol>
@@ -161,7 +162,8 @@ const Home: React.FC = () => {
                         className="functional-btn" 
                         style={{ float: 'right' }}
                         onClick={() => handleRemoveApartment(rentalApartment.id || -1)}
-                      >Remove</IonButton>
+                      >Remove
+                      </IonButton>
                     </IonCol>
                   </IonRow>
                 </IonCardContent>

@@ -24,6 +24,7 @@ import { useState } from 'react';
 import { useHistory } from 'react-router';
 import { createApartment } from '../databaseHandler';
 
+// Format the date to YYYY/mm/dd format
 function ymdFormatDate(year: number, month: number, date: number) {
   if (!year && !month && !date) {
     return '';
@@ -32,6 +33,7 @@ function ymdFormatDate(year: number, month: number, date: number) {
   return `${year}/${month}/${date}`;
 };
 
+// Get the year, month, day fo the user input
 function convertDateToYMD(date: string) {
   if (!date) {
     return '';
@@ -138,7 +140,7 @@ const Create: React.FC = () => {
       confirmationModal({
         header: 'Create New Apartment Confirmation',
         message: `
-          <h6>A New Apartment Will Be Create With The Following Data: </h6>
+          <h6>A new apartment will be create with the following data: </h6>
           <div>Property Type: ${RentalApplicationData.propertyType}</div>
           <div>Bedrooms: ${RentalApplicationData.bedrooms}</div>
           <div>Date: ${RentalApplicationData.date}</div>
@@ -199,7 +201,6 @@ const Create: React.FC = () => {
         },
       ],
     });
-    
   }
 
   return (
