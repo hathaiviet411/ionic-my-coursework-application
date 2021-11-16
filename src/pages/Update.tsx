@@ -147,9 +147,9 @@ const Update: React.FC = () => {
       setTimeout(() => {
         setShowToastMessage(false);
       }, 3000)
-    } else if (RentalApplicationData.nameReporter.length === 0) {
+    } else if (RentalApplicationData.furnitureTypes.length === 0) {
       setHeaderMessage('Warning');
-      setMessage(`Reporter's name is required !`);
+      setMessage(`Furniture type is required !`);
       setColorMessage('danger');
       setShowToastMessage(true);
 
